@@ -1,12 +1,8 @@
-from pyrevit import forms
-from pyrevit import script
+#! python3
+from pyrevit import UI, script
 
 logger = script.get_logger()
 
-forms.alert(
-    "Audit placeholder. Replace this with real checks.",
-    title="WWP BIM Tools",
-    warn_icon=False,
-)
+UI.TaskDialog.Show("WWP BIM Tools", "Audit placeholder. Replace this with real checks.")
 
 logger.info("Audit placeholder finished.")

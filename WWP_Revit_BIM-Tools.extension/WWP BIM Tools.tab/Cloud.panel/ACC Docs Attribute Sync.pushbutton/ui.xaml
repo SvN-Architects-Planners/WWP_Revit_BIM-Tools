@@ -71,14 +71,14 @@
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock Text="Client ID" FontWeight="SemiBold" />
-                        <TextBox x:Name="ClientIdBox" />
+                        <TextBlock x:Name="ClientIdLabel" Text="Client ID" FontWeight="SemiBold" Visibility="Collapsed" />
+                        <TextBox x:Name="ClientIdBox" Visibility="Collapsed" />
 
-                        <TextBlock Text="Client Secret" FontWeight="SemiBold" />
-                        <PasswordBox x:Name="ClientSecretBox" />
+                        <TextBlock x:Name="ClientSecretLabel" Text="Client Secret" FontWeight="SemiBold" Visibility="Collapsed" />
+                        <PasswordBox x:Name="ClientSecretBox" Visibility="Collapsed" />
 
-                        <TextBlock Text="Redirect URI" FontWeight="SemiBold" />
-                        <TextBox x:Name="RedirectUriBox" IsReadOnly="True" />
+                        <TextBlock x:Name="RedirectUriLabel" Text="Redirect URI" FontWeight="SemiBold" Visibility="Collapsed" />
+                        <TextBox x:Name="RedirectUriBox" IsReadOnly="True" Visibility="Collapsed" />
 
                         <Button x:Name="LoginButton" Content="Sign In" Height="32" Margin="0,6,0,12" />
 
@@ -89,6 +89,10 @@
 
                         <TextBlock Text="Project" FontWeight="SemiBold" />
                         <ComboBox x:Name="ProjectCombo" />
+
+                        <TextBlock Text="Project Folder URL" FontWeight="SemiBold" />
+                        <TextBox x:Name="FolderUrlBox" />
+                        <Button x:Name="LoadFolderButton" Content="Load Folder" Height="30" Margin="0,4,0,8" />
 
                         <TextBlock Text="Folders" FontWeight="SemiBold" Margin="0,8,0,4" />
                         <Border BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="6" Height="260">
@@ -125,6 +129,7 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="File" CellTemplate="{StaticResource FileTemplate}" Width="260" />
+                                <GridViewColumn Header="Type" DisplayMemberBinding="{Binding ExtensionType}" Width="200" />
                                 <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}" Width="260" />
                                 <GridViewColumn Header="Item Id" DisplayMemberBinding="{Binding Id}" Width="360" />
                             </GridView>

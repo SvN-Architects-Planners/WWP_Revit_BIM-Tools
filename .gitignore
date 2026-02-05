@@ -1,1 +1,4 @@
-﻿.vs/
+.vs/
+.env
+__pycache__/
+*.pyc

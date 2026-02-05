@@ -44,101 +44,118 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="16">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="200" />
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="200" />
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{StaticResource DarkBrush}" CornerRadius="10" Padding="16" Margin="0,0,0,12">
-            <Grid>
+            <Border Grid.Row="0" Background="{StaticResource DarkBrush}" CornerRadius="10" Padding="16" Margin="0,0,0,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Print Sheets from Excel" Foreground="White" FontSize="22" FontWeight="SemiBold" />
+                        <TextBlock x:Name="DocTitleText" Text="Active Document" Foreground="#D5D5D5" Margin="0,4,0,0" />
+                    </StackPanel>
+                    <Button x:Name="PrintNowButton" Grid.Column="1" Content="Print Now" Background="{StaticResource AccentBrush}" Foreground="White" FontWeight="SemiBold" />
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="200" />
                 </Grid.ColumnDefinitions>
+
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="Print Sheets from Excel" Foreground="White" FontSize="22" FontWeight="SemiBold" />
-                    <TextBlock x:Name="DocTitleText" Text="Active Document" Foreground="#D5D5D5" Margin="0,4,0,0" />
+                    <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Excel Database" FontWeight="SemiBold" FontSize="14" />
+                            <TextBlock Text="Column A: Printed File Name (overrides naming format), Column B: Drawing Name, Column C: Drawing Number" Foreground="#666666" Margin="0,4,0,8" />
+                            <TextBox x:Name="ExcelPathBox" IsReadOnly="True" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="BrowseExcelButton" Content="Browse Excel" Width="120" />
+                                <Button x:Name="GenerateExcelButton" Content="Generate/Update" Width="140" Margin="8,4,0,8" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Sheet Selection" FontWeight="SemiBold" FontSize="14" />
+                            <TextBlock Text="Sheet Set" FontWeight="SemiBold" Margin="0,6,0,0" />
+                            <ComboBox x:Name="SheetSetCombo" />
+                            <CheckBox x:Name="UseSelectedSheetsCheck" Content="Use selected sheets only" Margin="0,4,0,8" />
+                            <ListBox x:Name="SheetListBox" SelectionMode="Extended" Height="200" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Output Folder" FontWeight="SemiBold" FontSize="14" />
+                            <TextBox x:Name="OutputPathBox" IsReadOnly="True" />
+                            <Button x:Name="BrowseOutputButton" Content="Choose Folder" Width="120" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14">
+                        <StackPanel>
+                            <TextBlock Text="Export Options" FontWeight="SemiBold" FontSize="14" />
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                <ToggleButton x:Name="PdfToggle" Content="PDF" IsChecked="True" />
+                                <ToggleButton x:Name="DwgToggle" Content="DWG" />
+                            </StackPanel>
+                            <TextBlock Text="Naming Format" FontWeight="SemiBold" Margin="0,10,0,0" />
+                            <TextBox x:Name="NamingFormatBox" Text="{}{number}_{name}" />
+                            <TextBlock Text="{}Tokens: {index} {number} {name} {name_dash} {name_underline} {current_date} {issue_date} {rev_number} {rev_desc} {rev_date}" Foreground="#666666" TextWrapping="Wrap" />
+                            <TextBlock Text="{}Project/user tokens: {proj_name} {proj_number} {proj_building_name} {proj_issue_date} {proj_org_name} {proj_status} {username} {revit_version}" Foreground="#666666" TextWrapping="Wrap" Margin="0,2,0,0" />
+                            <TextBlock Text="{}Param tokens: {sheet_param:PARAM} {tblock_param:PARAM} {proj_param:PARAM} {glob_param:PARAM} | Excel: {excel_name} {excel_number}" Foreground="#666666" TextWrapping="Wrap" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
-                <Button x:Name="PrintNowButton" Grid.Column="1" Content="Print Now" Background="{StaticResource AccentBrush}" Foreground="White" FontWeight="SemiBold" />
+
+                <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="16" Background="Transparent" />
+
+                <StackPanel Grid.Column="2">
+                    <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="Schedule One-Time Print" FontWeight="SemiBold" FontSize="14" />
+                            <TextBlock Text="Revit must remain open until the scheduled time." Foreground="#666666" Margin="0,4,0,8" />
+                            <TextBlock Text="Date" FontWeight="SemiBold" />
+                            <DatePicker x:Name="ScheduleDatePicker" />
+                            <TextBlock Text="Time (HH:MM, 24h)" FontWeight="SemiBold" />
+                            <TextBox x:Name="ScheduleTimeBox" Text="09:00" />
+                            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                <Button x:Name="ScheduleButton" Content="Schedule" Width="120" />
+                                <Button x:Name="CancelScheduleButton" Content="Cancel Schedule" Width="140" Margin="8,4,0,8" />
+                            </StackPanel>
+                            <TextBlock x:Name="ScheduleStatusText" Text="No schedule" Foreground="#666666" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14">
+                        <StackPanel>
+                            <TextBlock Text="Notes" FontWeight="SemiBold" FontSize="14" />
+                            <TextBlock Text="- Drawing Name (Column B) must match sheet names exactly." TextWrapping="Wrap" Margin="0,6,0,0" />
+                            <TextBlock Text="- Printed File Name (Column A) controls output names." TextWrapping="Wrap" Margin="0,4,0,0" />
+                            <TextBlock Text="- Use Generate/Update to build the database from sheets." TextWrapping="Wrap" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
             </Grid>
-        </Border>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Column="0">
-                <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14" Margin="0,0,0,12">
-                    <StackPanel>
-                        <TextBlock Text="Excel Database" FontWeight="SemiBold" FontSize="14" />
-                        <TextBlock Text="Column A: Printed File Name, Column B: Drawing Name, Column C: Drawing Number" Foreground="#666666" Margin="0,4,0,8" />
-                        <TextBox x:Name="ExcelPathBox" IsReadOnly="True" />
-                        <StackPanel Orientation="Horizontal">
-                            <Button x:Name="BrowseExcelButton" Content="Browse Excel" Width="120" />
-                            <Button x:Name="GenerateExcelButton" Content="Generate/Update" Width="140" Margin="8,4,0,8" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-
-                <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14" Margin="0,0,0,12">
-                    <StackPanel>
-                        <TextBlock Text="Output Folder" FontWeight="SemiBold" FontSize="14" />
-                        <TextBox x:Name="OutputPathBox" IsReadOnly="True" />
-                        <Button x:Name="BrowseOutputButton" Content="Choose Folder" Width="120" />
-                    </StackPanel>
-                </Border>
-
-                <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14">
-                    <StackPanel>
-                        <TextBlock Text="Export Options" FontWeight="SemiBold" FontSize="14" />
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                            <ToggleButton x:Name="PdfToggle" Content="PDF" IsChecked="True" />
-                            <ToggleButton x:Name="DwgToggle" Content="DWG" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </StackPanel>
-
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="16" Background="Transparent" />
-
-            <StackPanel Grid.Column="2">
-                <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14" Margin="0,0,0,12">
-                    <StackPanel>
-                        <TextBlock Text="Schedule One-Time Print" FontWeight="SemiBold" FontSize="14" />
-                        <TextBlock Text="Revit must remain open until the scheduled time." Foreground="#666666" Margin="0,4,0,8" />
-                        <TextBlock Text="Date" FontWeight="SemiBold" />
-                        <DatePicker x:Name="ScheduleDatePicker" />
-                        <TextBlock Text="Time (HH:MM, 24h)" FontWeight="SemiBold" />
-                        <TextBox x:Name="ScheduleTimeBox" Text="09:00" />
-                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                            <Button x:Name="ScheduleButton" Content="Schedule" Width="120" />
-                            <Button x:Name="CancelScheduleButton" Content="Cancel Schedule" Width="140" Margin="8,4,0,8" />
-                        </StackPanel>
-                        <TextBlock x:Name="ScheduleStatusText" Text="No schedule" Foreground="#666666" />
-                    </StackPanel>
-                </Border>
-
-                <Border Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="14">
-                    <StackPanel>
-                        <TextBlock Text="Notes" FontWeight="SemiBold" FontSize="14" />
-                        <TextBlock Text="- Drawing Name (Column B) must match sheet names exactly." TextWrapping="Wrap" Margin="0,6,0,0" />
-                        <TextBlock Text="- Printed File Name (Column A) controls output names." TextWrapping="Wrap" Margin="0,4,0,0" />
-                        <TextBlock Text="- Use Generate/Update to build the database from sheets." TextWrapping="Wrap" Margin="0,4,0,0" />
-                    </StackPanel>
-                </Border>
-            </StackPanel>
+            <Border Grid.Row="2" Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="12">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Log" FontWeight="SemiBold" Margin="0,0,0,6" />
+                    <TextBox x:Name="LogBox" IsReadOnly="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
         </Grid>
-
-        <Border Grid.Row="2" Background="{StaticResource PanelBrush}" CornerRadius="10" Padding="12">
-            <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="Log" FontWeight="SemiBold" Margin="0,0,0,6" />
-                <TextBox x:Name="LogBox" IsReadOnly="True" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" />
-            </DockPanel>
-        </Border>
-    </Grid>
+    </ScrollViewer>
 </Window>
