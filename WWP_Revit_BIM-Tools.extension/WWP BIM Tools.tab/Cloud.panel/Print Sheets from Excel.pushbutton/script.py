@@ -670,19 +670,47 @@ class VariablePaperPrintSettingListItem(PrintSettingListItem):
 
 
 class EditNamingFormatsWindow(forms.WPFWindow):
-    def __init__(self, xaml_file_name, start_with=None):
+    def __init__(self, xaml_file_name, start_with=None, doc=None):
         forms.WPFWindow.__init__(self, xaml_file_name)
 
         self._drop_pos = 0
         self._starting_item = start_with
         self._saved = False
+        self._doc = doc
 
         self.reset_naming_formats()
         self.reset_formatters()
 
     @staticmethod
-    def get_default_formatters():
-        return [
+    def _get_project_param_names(doc):
+        names = []
+        if not doc:
+            return names
+        try:
+            params = doc.ProjectInformation.Parameters
+        except Exception:
+            params = None
+        if not params:
+            return names
+        try:
+            for p in params:
+                try:
+                    name = p.Definition.Name if p and p.Definition else None
+                except Exception:
+                    name = None
+                if name and name not in names:
+                    names.append(name)
+        except Exception:
+            pass
+        try:
+            names.sort(key=lambda x: x.lower())
+        except Exception:
+            pass
+        return names
+
+    @staticmethod
+    def get_default_formatters(doc=None):
+        formatters = [
             NamingFormatter(
                 template='{index}',
                 desc='Print Index Number e.g. "0001"'
@@ -785,6 +813,17 @@ class EditNamingFormatsWindow(forms.WPFWindow):
             ),
         ]
 
+        proj_params = EditNamingFormatsWindow._get_project_param_names(doc)
+        for pname in proj_params:
+            formatters.append(
+                NamingFormatter(
+                    template='{proj_param:%s}' % pname,
+                    desc='Project Parameter: %s' % pname
+                )
+            )
+
+        return formatters
+
     @staticmethod
     def get_default_naming_formats():
         return [
@@ -836,7 +875,7 @@ class EditNamingFormatsWindow(forms.WPFWindow):
 
     def reset_formatters(self):
         self.formatters_wp.ItemsSource = \
-            EditNamingFormatsWindow.get_default_formatters()
+            EditNamingFormatsWindow.get_default_formatters(self._doc)
 
     def reset_naming_formats(self):
         self.formats_lb.ItemsSource = \
@@ -2183,7 +2222,8 @@ class PrintSheetsWindow(forms.WPFWindow):
         editfmt_wnd = \
             EditNamingFormatsWindow(
                 'EditNamingFormats.xaml',
-                start_with=self.selected_naming_format
+                start_with=self.selected_naming_format,
+                doc=self.selected_doc
                 )
         editfmt_wnd.show_dialog()
         self.namingformat_cb.ItemsSource = editfmt_wnd.naming_formats
